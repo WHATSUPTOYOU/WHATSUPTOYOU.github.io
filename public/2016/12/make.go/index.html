@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en-us">
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=8888&amp;path=livereload" data-no-instant defer></script>
+  <link href="https://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  
+
+  <title> Make.go  &middot; npf.io </title>
+
+  
+  <link rel="stylesheet" href="http://192.168.42.140:8888//css/poole.css">
+  <link rel="stylesheet" href="http://192.168.42.140:8888//css/syntax.css">
+  <link rel="stylesheet" href="http://192.168.42.140:8888//css/hyde.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=PT+Sans:400,400italic,700|Abril+Fatface">
+
+  
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="manifest" href="/manifest.json">
+  <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+  <meta name="theme-color" content="#ffffff">
+
+  <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
+
+  <link href='https://fonts.googleapis.com/css?family=Fira+Sans:400,300' rel='stylesheet' type='text/css'>
+
+  <script src="//ajax.googleapis.com/ajax/libs/webfont/1.4.7/webfont.js"></script>
+  <script>
+    WebFont.load({
+      google: {
+        families: ['Fira Sans']
+      }
+    });
+  </script>
+
+</head>
+
+<body>
+
+  <div class="sidebar">
+  <div class="container sidebar-sticky">
+    <div class="sidebar-about" align=center>
+      <h1 class="brand"><a href="http://192.168.42.140:8888/">npf.io</a></h1>
+      <img src="/moose.svg" width=50% />
+      <p class="lead">
+         code by Nate Finch 
+      </p>
+    </div>
+    <ul class="sidebar-nav">
+      <li><a href="http://192.168.42.140:8888//blog">Posts</a></li>
+      
+      <li><a href="/about/">About </a></li>
+      
+      <br/> 
+      <li>Code:</li>
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+      <li><a href="https://github.com/gnormal/gnorm">Gnorm </a></li>
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+      <li><a href="https://github.com/natefinch/gorram">Gorram </a></li>
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+      <li><a href="https://github.com/natefinch/lumberjack">Lumberjack </a></li>
+       
+      <li><a href="https://github.com/magefile/mage">Mage </a></li>
+       
+       
+       
+       
+       
+       
+       
+      <li><a href="https://github.com/natefinch/npipe">NPipe </a></li>
+       
+       
+       
+       
+       
+      <li><a href="https://github.com/natefinch/pie">Pie </a></li>
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+      <li><a href="https://github.com/starlight-go/starlight">Starlight </a></li>
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+      
+    </ul>
+    <a href="https://twitter.com/natethefinch"><i class="fa fa-twitter-square"></i></a>&nbsp;&nbsp; 
+    
+    
+     <a href="https://github.com/natefinch"><i class="fa fa-github-square"></i></a>&nbsp;&nbsp; 
+    
+    <a href="https://plus.google.com/&#43;NateFinch"><i class="fa fa-google-plus"></i></a> 
+
+    <p class="footnote">powered by <a href="http://gohugo.io">Hugo</a> <br/> &copy; 2024 Nate Finch. All rights reserved.</p>
+
+  </div>
+</div>
+
+  <div class="content container">
+    <div class="post">
+    <h1 class="post-title">Make.go</h1>
+    <span class="post-date">Dec 14, 2016</span>
+    
+    <p>A question came up at the Framingham Go meetup tonight about why something like
+Gradle hasn&rsquo;t taken hold in the Go community.  I can&rsquo;t say that I know for sure
+what the answer is - I don&rsquo;t speak for the community - but, I have some guesses.
+I think part of it is that many projects don&rsquo;t need a full-fledged build tool -
+for your typical Go networked server, a single binary built with <code>go build</code> is
+probably fine.  For more complex builds, which may require more steps than just
+compile and link, like for bundling static assets for a web server, for example,
+many people in the Go community reach for Make.  Personally, I find that
+unfortunate.  Make is not Windows friendly, and it has its own language and
+conventions that you need to learn.</p>
+<p>I think there&rsquo;s a simpler, better way for Go projects - a make.go file.  This is
+a file containing go code that knows how to run your build.</p>
+<p>A make.go file is incredibly easy to create.  Add a file called make.go to the
+root of your project (or wherever you feel appropriate, but I like the root of
+the project because then it&rsquo;s easy to find).  Give the file a build tag along
+the lines of</p>
+<pre tabindex="0"><code>//+build dontbuildme
+</code></pre><p>The actual build tag isn&rsquo;t important, so long as it&rsquo;s something you&rsquo;d never
+think of using as a real tag.  Its point is to exlcude this file when you run
+<code>go build ./...</code> on your project directory, so it won&rsquo;t be accidentally included
+in your executable.</p>
+<p>Now give it a <code>func main()</code> like any other command line application, and away
+you go.  When you want to build the project, just run <code>go run make.go</code> - go run
+ignores the build tag, and just builds the files you specify on the command
+line. Bam, done.</p>
+<p>I first saw this used by Brad Fitzpatrick&rsquo;s Camlistore project, and I think it&rsquo;s
+brilliant.  It follows the same thinking as writing unit tests - tests should
+just be go code, like anything else. So why not the same for your build code?
+There&rsquo;s nothing Gradle or Make can do that you can&rsquo;t do with plain old go code.
+It gives you an infinitely extensible language that doesn&rsquo;t impose any
+unecessary restrictions, and will never coerce you into making contortions to fit
+its model of how it thinks you should assemble a project.</p>
+
+    
+
+     
+	
+    <div id="disqus_thread"></div>
+<script type="text/javascript">
+
+(function() {
+    
+    
+    if (window.location.hostname == "localhost") 
+        return;
+
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    var disqus_shortname = 'npfio';
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+})();
+</script>
+<noscript>Please enable JavaScript to view the comments powered by <a href="http://disqus.com/?ref_noscript">Disqus.</a></noscript>
+</div>
+</div> 
+
+</body>w
+</html>

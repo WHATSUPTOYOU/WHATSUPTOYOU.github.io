@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en-us">
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=8888&amp;path=livereload" data-no-instant defer></script>
+  <link href="https://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  
+
+  <title> Handle and Check - Let&#39;s Not  &middot; npf.io </title>
+
+  
+  <link rel="stylesheet" href="http://192.168.42.140:8888//css/poole.css">
+  <link rel="stylesheet" href="http://192.168.42.140:8888//css/syntax.css">
+  <link rel="stylesheet" href="http://192.168.42.140:8888//css/hyde.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=PT+Sans:400,400italic,700|Abril+Fatface">
+
+  
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="manifest" href="/manifest.json">
+  <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+  <meta name="theme-color" content="#ffffff">
+
+  <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
+
+  <link href='https://fonts.googleapis.com/css?family=Fira+Sans:400,300' rel='stylesheet' type='text/css'>
+
+  <script src="//ajax.googleapis.com/ajax/libs/webfont/1.4.7/webfont.js"></script>
+  <script>
+    WebFont.load({
+      google: {
+        families: ['Fira Sans']
+      }
+    });
+  </script>
+
+</head>
+
+<body>
+
+  <div class="sidebar">
+  <div class="container sidebar-sticky">
+    <div class="sidebar-about" align=center>
+      <h1 class="brand"><a href="http://192.168.42.140:8888/">npf.io</a></h1>
+      <img src="/moose.svg" width=50% />
+      <p class="lead">
+         code by Nate Finch 
+      </p>
+    </div>
+    <ul class="sidebar-nav">
+      <li><a href="http://192.168.42.140:8888//blog">Posts</a></li>
+      
+      <li><a href="/about/">About </a></li>
+      
+      <br/> 
+      <li>Code:</li>
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+      <li><a href="https://github.com/gnormal/gnorm">Gnorm </a></li>
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+      <li><a href="https://github.com/natefinch/gorram">Gorram </a></li>
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+      <li><a href="https://github.com/natefinch/lumberjack">Lumberjack </a></li>
+       
+      <li><a href="https://github.com/magefile/mage">Mage </a></li>
+       
+       
+       
+       
+       
+       
+       
+      <li><a href="https://github.com/natefinch/npipe">NPipe </a></li>
+       
+       
+       
+       
+       
+      <li><a href="https://github.com/natefinch/pie">Pie </a></li>
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+      <li><a href="https://github.com/starlight-go/starlight">Starlight </a></li>
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+      
+    </ul>
+    <a href="https://twitter.com/natethefinch"><i class="fa fa-twitter-square"></i></a>&nbsp;&nbsp; 
+    
+    
+     <a href="https://github.com/natefinch"><i class="fa fa-github-square"></i></a>&nbsp;&nbsp; 
+    
+    <a href="https://plus.google.com/&#43;NateFinch"><i class="fa fa-google-plus"></i></a> 
+
+    <p class="footnote">powered by <a href="http://gohugo.io">Hugo</a> <br/> &copy; 2024 Nate Finch. All rights reserved.</p>
+
+  </div>
+</div>
+
+  <div class="content container">
+    <div class="post">
+    <h1 class="post-title">Handle and Check - Let&#39;s Not</h1>
+    <span class="post-date">Sep 6, 2018</span>
+    
+    <p>There&rsquo;s a new error handling design <a href="https://go.googlesource.com/proposal/+/master/design/go2draft-error-handling.md">proposed here</a>.  It&rsquo;s&hellip;. not great.</p>
+<p>Handle is a new keyword that basically defines a translation that can be applied
+to errors returned from the current function:</p>
+<pre tabindex="0"><code>func printSum(a, b string) error {
+	handle err { return fmt.Errorf(&#34;error summing %v and %v: %v&#34;, a, b, err ) }
+	x := check strconv.Atoi(a)
+	y := check strconv.Atoi(b)
+	fmt.Println(&#34;result:&#34;, x + y)
+	return nil
+}
+</code></pre><p>Check applies the handler and returns if the error passed into it is not nil,
+otherwise it returns the non-error value.</p>
+<p>Handle, in my opinion is kind of useless. We can already do this today with functions thusly:</p>
+<pre tabindex="0"><code>func printSum(a, b string) (err error) {
+	check := func(err error) error { 
+        return fmt.Errorf(&#34;error summing %v and %v: %v&#34;, a, b, err )
+    }
+	x, err := strconv.Atoi(a)
+    if err != nil {
+        return check(err)
+    }
+	y, err := strconv.Atoi(b)
+    if err != nil {
+        return check(err)
+    }
+	fmt.Println(&#34;result:&#34;, x + y)
+	return nil
+}
+</code></pre><p>That does literally the same thing as check and handle above.</p>
+<p>The stated reason for adding check and handle is that too many people just write
+&ldquo;return err&rdquo; and don&rsquo;t customize the error at all, which means somewhere at the
+top of your program, you get this inscrutable error from deep in the bowels of
+your code, and you have no idea what it actually means.</p>
+<p>It&rsquo;s trivial to write code that does most of what check and handle do&hellip; and no
+one&rsquo;s doing it today (or at least, not often).  So why add this complexity?</p>
+<p>Check and handle actually make error handling worse.  With the check and handle
+code, there&rsquo;s no required &ldquo;error handling scope&rdquo; after the calls to add context
+to the error, log it, clean up, etc.  With the current code, I <em>always</em> have an
+if statement that I can easily slot more lines into, in order to make the error
+more useful and do other things on the error path.  With <code>check</code>, that space in
+the code doesn&rsquo;t exist.  There&rsquo;s a barrier to making that code handle errors
+better - now you have to remove <code>check</code> and swap in an if statement. Yes,
+you can add a new <code>handle</code> section, but that applies globally to any further
+errors returns in the function, not just for this one specific error.  Most of
+the time I want to add information about one specific error case.</p>
+<p>So, for example, in the code above, I would want a different error message for A
+failing Atoi vs. B failing Atoi&hellip;. because in real code, which one is the
+problem may not be obvious if the error message just says &ldquo;either A or B is a
+problem&rdquo;.</p>
+<p>Yes, <code>if err != nil {</code> constitutes a lot of Go code.  That&rsquo;s ok.  That&rsquo;s actually
+good.  Error handling is extremely important.  Check and handle don&rsquo;t make error
+handling better.  I suspect they&rsquo;ll actually make it worse.</p>
+<p>A refrain I often state about changes requested for Go is that most of them
+just involve avoiding an if statement or a loop.  This is one of them.  That&rsquo;s
+not a good enough reason to change the language, in my opinion.</p>
+
+    
+
+     
+	
+    <div id="disqus_thread"></div>
+<script type="text/javascript">
+
+(function() {
+    
+    
+    if (window.location.hostname == "localhost") 
+        return;
+
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    var disqus_shortname = 'npfio';
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+})();
+</script>
+<noscript>Please enable JavaScript to view the comments powered by <a href="http://disqus.com/?ref_noscript">Disqus.</a></noscript>
+</div>
+</div> 
+
+</body>w
+</html>

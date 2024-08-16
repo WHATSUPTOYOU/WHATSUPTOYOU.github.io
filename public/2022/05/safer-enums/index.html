@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en-us">
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=8888&amp;path=livereload" data-no-instant defer></script>
+  <link href="https://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  
+
+  <title> Safer Enums  &middot; npf.io </title>
+
+  
+  <link rel="stylesheet" href="http://192.168.42.140:8888//css/poole.css">
+  <link rel="stylesheet" href="http://192.168.42.140:8888//css/syntax.css">
+  <link rel="stylesheet" href="http://192.168.42.140:8888//css/hyde.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=PT+Sans:400,400italic,700|Abril+Fatface">
+
+  
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="manifest" href="/manifest.json">
+  <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+  <meta name="theme-color" content="#ffffff">
+
+  <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
+
+  <link href='https://fonts.googleapis.com/css?family=Fira+Sans:400,300' rel='stylesheet' type='text/css'>
+
+  <script src="//ajax.googleapis.com/ajax/libs/webfont/1.4.7/webfont.js"></script>
+  <script>
+    WebFont.load({
+      google: {
+        families: ['Fira Sans']
+      }
+    });
+  </script>
+
+</head>
+
+<body>
+
+  <div class="sidebar">
+  <div class="container sidebar-sticky">
+    <div class="sidebar-about" align=center>
+      <h1 class="brand"><a href="http://192.168.42.140:8888/">npf.io</a></h1>
+      <img src="/moose.svg" width=50% />
+      <p class="lead">
+         code by Nate Finch 
+      </p>
+    </div>
+    <ul class="sidebar-nav">
+      <li><a href="http://192.168.42.140:8888//blog">Posts</a></li>
+      
+      <li><a href="/about/">About </a></li>
+      
+      <br/> 
+      <li>Code:</li>
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+      <li><a href="https://github.com/gnormal/gnorm">Gnorm </a></li>
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+      <li><a href="https://github.com/natefinch/gorram">Gorram </a></li>
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+      <li><a href="https://github.com/natefinch/lumberjack">Lumberjack </a></li>
+       
+      <li><a href="https://github.com/magefile/mage">Mage </a></li>
+       
+       
+       
+       
+       
+       
+       
+      <li><a href="https://github.com/natefinch/npipe">NPipe </a></li>
+       
+       
+       
+       
+       
+      <li><a href="https://github.com/natefinch/pie">Pie </a></li>
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+      <li><a href="https://github.com/starlight-go/starlight">Starlight </a></li>
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+      
+    </ul>
+    <a href="https://twitter.com/natethefinch"><i class="fa fa-twitter-square"></i></a>&nbsp;&nbsp; 
+    
+    
+     <a href="https://github.com/natefinch"><i class="fa fa-github-square"></i></a>&nbsp;&nbsp; 
+    
+    <a href="https://plus.google.com/&#43;NateFinch"><i class="fa fa-google-plus"></i></a> 
+
+    <p class="footnote">powered by <a href="http://gohugo.io">Hugo</a> <br/> &copy; 2024 Nate Finch. All rights reserved.</p>
+
+  </div>
+</div>
+
+  <div class="content container">
+    <div class="post">
+    <h1 class="post-title">Safer Enums</h1>
+    <span class="post-date">May 13, 2022</span>
+    
+	    
+    	<p class="seriesname">Series: <a href="http://192.168.42.140:8888//series/bite-sized-go">Bite Sized Go</a></p>
+    
+    <p>How to &ldquo;do&rdquo; enums is a common problem in Go, given that it doesn&rsquo;t have “real”
+enums like other languages. There&rsquo;s basically two common ways to do it, the
+first is just typed strings:</p>
+<pre tabindex="0"><code>type FlagID string
+const (
+    FooBar FlagID = “FooBar”
+    FizzBuzz FlagID = “FizzBuzz”
+)
+func IsEnabled(id FlagID) bool {
+</code></pre><p>The problem with this is that string literals (really, string constants) in Go
+will get converted to the correct type, so you’d still be able to call
+<code>IsEnabled(“foo-bar”)</code> without the compiler complaining.</p>
+<p>A common replacement is to use numeric constants:</p>
+<pre tabindex="0"><code>type FlagID int
+const (
+    FooBar FlagID = iota
+    FizzBuzz
+)
+func IsEnabled(id FlagID) bool {
+</code></pre><p>This is nice, because it would be pretty odd to see code like <code>IsEnabled(4)</code>.
+But the problem then becomes that you can&rsquo;t easily print out the name of the
+enum in logs or errors.</p>
+<p>To fix this, someone (<a href="https://go.dev/blog/generate">Rob Pike?</a>) wrote
+<a href="https://pkg.go.dev/golang.org/x/tools/cmd/stringer">stringer</a>, which generates
+code to print out the name of the flags&hellip; but then you have to remember to run
+stringer, and it&rsquo;s a bunch of (really) ugly code.</p>
+<p>The solution to this was something I first heard suggested by Dave Cheney
+(because of course it was), and is so simple and effective that I can’t believe
+I had never thought of it before. Make FlagName into a very simple struct:</p>
+<pre tabindex="0"><code>type FlagID struct {
+    name string
+}
+func (f FlagID) String() { return f.name } 
+
+var (
+    FooBar = FlagID{ “FooBar” }
+    FizzBuzz = FlagID{ “FizzBuzz” }
+)
+
+func IsEnabled(id FlagID) bool {
+</code></pre><p>Now, you can’t call <code>IsEnabled(“nope”)</code>, because the constant string can’t be
+converted into a struct, so the compiler would complain.</p>
+<p>There’s no size difference between a <code>string</code> and a <code>struct{ string }</code> and it&rsquo;s
+just as easy to read as a straight string. Because of the String() method, you
+can pass these values to <code>%s</code> etc in format strings and they&rsquo;ll print out the
+name with no extra code or work.</p>
+<p>The one tiny drawback is that the globals have to be variables instead of
+constants, but that’s one of those problems that really only exists in the
+theoretical realm. I’ve never seen a bug from someone overwriting a global
+variable like this, that is intended to be immutable.</p>
+<p>I’ll definitely be using this pattern in my projects going forward. I hope this
+helps some folks who are looking to avoid typos and accidental bugs from
+stringly typed code in Go.</p>
+
+    
+
+    
+        
+	    
+	    <hr/>
+    	<p><a href="" id="series"></a>This is a post in the <b>Bite Sized Go</b> series.<br/>
+    	Other posts in this series:</p>
+        
+        
+        <ul class="series">
+        
+        </ul>
+	 
+	
+    <div id="disqus_thread"></div>
+<script type="text/javascript">
+
+(function() {
+    
+    
+    if (window.location.hostname == "localhost") 
+        return;
+
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    var disqus_shortname = 'npfio';
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+})();
+</script>
+<noscript>Please enable JavaScript to view the comments powered by <a href="http://disqus.com/?ref_noscript">Disqus.</a></noscript>
+</div>
+</div> 
+
+</body>w
+</html>

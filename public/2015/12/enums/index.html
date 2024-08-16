@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en-us">
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=8888&amp;path=livereload" data-no-instant defer></script>
+  <link href="https://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  
+
+  <title> To Enum or Not To Enum  &middot; npf.io </title>
+
+  
+  <link rel="stylesheet" href="http://192.168.42.140:8888//css/poole.css">
+  <link rel="stylesheet" href="http://192.168.42.140:8888//css/syntax.css">
+  <link rel="stylesheet" href="http://192.168.42.140:8888//css/hyde.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=PT+Sans:400,400italic,700|Abril+Fatface">
+
+  
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="manifest" href="/manifest.json">
+  <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+  <meta name="theme-color" content="#ffffff">
+
+  <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
+
+  <link href='https://fonts.googleapis.com/css?family=Fira+Sans:400,300' rel='stylesheet' type='text/css'>
+
+  <script src="//ajax.googleapis.com/ajax/libs/webfont/1.4.7/webfont.js"></script>
+  <script>
+    WebFont.load({
+      google: {
+        families: ['Fira Sans']
+      }
+    });
+  </script>
+
+</head>
+
+<body>
+
+  <div class="sidebar">
+  <div class="container sidebar-sticky">
+    <div class="sidebar-about" align=center>
+      <h1 class="brand"><a href="http://192.168.42.140:8888/">npf.io</a></h1>
+      <img src="/moose.svg" width=50% />
+      <p class="lead">
+         code by Nate Finch 
+      </p>
+    </div>
+    <ul class="sidebar-nav">
+      <li><a href="http://192.168.42.140:8888//blog">Posts</a></li>
+      
+      <li><a href="/about/">About </a></li>
+      
+      <br/> 
+      <li>Code:</li>
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+      <li><a href="https://github.com/gnormal/gnorm">Gnorm </a></li>
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+      <li><a href="https://github.com/natefinch/gorram">Gorram </a></li>
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+      <li><a href="https://github.com/natefinch/lumberjack">Lumberjack </a></li>
+       
+      <li><a href="https://github.com/magefile/mage">Mage </a></li>
+       
+       
+       
+       
+       
+       
+       
+      <li><a href="https://github.com/natefinch/npipe">NPipe </a></li>
+       
+       
+       
+       
+       
+      <li><a href="https://github.com/natefinch/pie">Pie </a></li>
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+      <li><a href="https://github.com/starlight-go/starlight">Starlight </a></li>
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+      
+    </ul>
+    <a href="https://twitter.com/natethefinch"><i class="fa fa-twitter-square"></i></a>&nbsp;&nbsp; 
+    
+    
+     <a href="https://github.com/natefinch"><i class="fa fa-github-square"></i></a>&nbsp;&nbsp; 
+    
+    <a href="https://plus.google.com/&#43;NateFinch"><i class="fa fa-google-plus"></i></a> 
+
+    <p class="footnote">powered by <a href="http://gohugo.io">Hugo</a> <br/> &copy; 2024 Nate Finch. All rights reserved.</p>
+
+  </div>
+</div>
+
+  <div class="content container">
+    <div class="post">
+    <h1 class="post-title">To Enum or Not To Enum</h1>
+    <span class="post-date">Dec 2, 2015</span>
+    
+    <p>Enum-like values have come up in my reviews of other people&rsquo;s code a few times, and I&rsquo;d like to nail down what we feel is best practice.</p>
+<p>I&rsquo;ve seen many places what in other languages would be an enum, i.e. a bounded list of known values that encompass every value that should ever exist.</p>
+<p>The code I have been critical of simply calls these values strings, and creates a few well-known values, thusly:
+package tool</p>
+<pre tabindex="0"><code>// types of tools
+const (
+    ScrewdriverType = &#34;screwdriver&#34;
+    HammerType = &#34;hammer&#34;
+   // ...
+)
+
+type Tool struct {
+    typ string
+}
+
+func NewTool(tooltype string) (Tool, error) {
+    switch tooltype{
+        case ScrewdriverType, HammerType:
+            return Tool{typ:tooltype}, nil
+        default:
+            return Tool{}, errors.New(&#34;invalid type&#34;)
+    }
+}
+</code></pre><p>The problem with this is that there&rsquo;s nothing stopping you from doing something totally wrong like this:</p>
+<pre tabindex="0"><code>name := user.Name()
+
+// ... some other stuff
+
+a := NewTool(name)
+</code></pre><p>That would fail only at runtime, which kind of defeats the purpose of having a compiler.</p>
+<p>I&rsquo;m not sure why we don&rsquo;t at least define the tool type as a named type of string, i.e.</p>
+<pre tabindex="0"><code>package tool
+
+type ToolType string
+
+const (
+    Screwdriver ToolType = &#34;screwdriver&#34;
+    Hammer = &#34;hammer&#34;
+   // ...
+)
+
+type Tool struct {
+    typ ToolType
+}
+
+func NewTool(tooltype ToolType) Tool {
+        return Tool{typ:tooltype}
+}
+</code></pre><p>Note that now we can drop the error checking in NewTool because the compiler does it for us.  The ToolType still works in all ways like a string, so it&rsquo;s trivial to convert for printing, serialization, etc.</p>
+<p>However, this still lets you do something which is wrong but might not always look wrong:
+<code>a := NewTool(&quot;drill&quot;)</code>
+Because of how Go constants work, this will get converted to a ToolType, even though it&rsquo;s not one of the ones we have defined.</p>
+<p>The final revision, which is the one I&rsquo;d propose, removes even this possibility, by not using a string at all (it also uses a lot less memory and creates less garbage):</p>
+<pre tabindex="0"><code>package tool
+
+type ToolType int
+
+const (
+    Screwdriver ToolType = iota
+    Hammer
+   // ...
+)
+
+type Tool struct {
+    typ ToolType
+}
+
+func NewTool(tooltype ToolType) Tool {
+        return Tool{typ:tooltype}
+}
+</code></pre><p>This now prevents passing in a constant string that looks like it might be right. You can pass in a constant number, but <code>NewTool(5)</code> is a hell of a lot more obviously wrong than <code>NewTool(&quot;drill&quot;)</code>, IMO.</p>
+<p>The push back I&rsquo;ve heard about this is that then you have to manually write the String() function to make human-readable strings&hellip; but there are code generators that already do this for you in extremely optimized ways (see <a href="https://github.com/golang/tools/blob/master/cmd/stringer/stringer.go">https://github.com/golang/tools/blob/master/cmd/stringer/stringer.go</a>)</p>
+
+    
+
+     
+	
+    <div id="disqus_thread"></div>
+<script type="text/javascript">
+
+(function() {
+    
+    
+    if (window.location.hostname == "localhost") 
+        return;
+
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    var disqus_shortname = 'npfio';
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+})();
+</script>
+<noscript>Please enable JavaScript to view the comments powered by <a href="http://disqus.com/?ref_noscript">Disqus.</a></noscript>
+</div>
+</div> 
+
+</body>w
+</html>

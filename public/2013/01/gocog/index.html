@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en-us">
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=8888&amp;path=livereload" data-no-instant defer></script>
+  <link href="https://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  
+
+  <title> gocog  &middot; npf.io </title>
+
+  
+  <link rel="stylesheet" href="http://192.168.42.140:8888//css/poole.css">
+  <link rel="stylesheet" href="http://192.168.42.140:8888//css/syntax.css">
+  <link rel="stylesheet" href="http://192.168.42.140:8888//css/hyde.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=PT+Sans:400,400italic,700|Abril+Fatface">
+
+  
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="manifest" href="/manifest.json">
+  <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+  <meta name="theme-color" content="#ffffff">
+
+  <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
+
+  <link href='https://fonts.googleapis.com/css?family=Fira+Sans:400,300' rel='stylesheet' type='text/css'>
+
+  <script src="//ajax.googleapis.com/ajax/libs/webfont/1.4.7/webfont.js"></script>
+  <script>
+    WebFont.load({
+      google: {
+        families: ['Fira Sans']
+      }
+    });
+  </script>
+
+</head>
+
+<body>
+
+  <div class="sidebar">
+  <div class="container sidebar-sticky">
+    <div class="sidebar-about" align=center>
+      <h1 class="brand"><a href="http://192.168.42.140:8888/">npf.io</a></h1>
+      <img src="/moose.svg" width=50% />
+      <p class="lead">
+         code by Nate Finch 
+      </p>
+    </div>
+    <ul class="sidebar-nav">
+      <li><a href="http://192.168.42.140:8888//blog">Posts</a></li>
+      
+      <li><a href="/about/">About </a></li>
+      
+      <br/> 
+      <li>Code:</li>
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+      <li><a href="https://github.com/gnormal/gnorm">Gnorm </a></li>
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+      <li><a href="https://github.com/natefinch/gorram">Gorram </a></li>
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+      <li><a href="https://github.com/natefinch/lumberjack">Lumberjack </a></li>
+       
+      <li><a href="https://github.com/magefile/mage">Mage </a></li>
+       
+       
+       
+       
+       
+       
+       
+      <li><a href="https://github.com/natefinch/npipe">NPipe </a></li>
+       
+       
+       
+       
+       
+      <li><a href="https://github.com/natefinch/pie">Pie </a></li>
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+      <li><a href="https://github.com/starlight-go/starlight">Starlight </a></li>
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+      
+    </ul>
+    <a href="https://twitter.com/natethefinch"><i class="fa fa-twitter-square"></i></a>&nbsp;&nbsp; 
+    
+    
+     <a href="https://github.com/natefinch"><i class="fa fa-github-square"></i></a>&nbsp;&nbsp; 
+    
+    <a href="https://plus.google.com/&#43;NateFinch"><i class="fa fa-google-plus"></i></a> 
+
+    <p class="footnote">powered by <a href="http://gohugo.io">Hugo</a> <br/> &copy; 2024 Nate Finch. All rights reserved.</p>
+
+  </div>
+</div>
+
+  <div class="content container">
+    <div class="post">
+    <h1 class="post-title">gocog</h1>
+    <span class="post-date">Jan 25, 2013</span>
+    
+    <p>I recently got very enamored with <!-- raw HTML omitted -->Go<!-- raw HTML omitted -->, and decided that I needed to write a real program with it to properly get up to speed. One thing came to mind after reading a lot on the <!-- raw HTML omitted -->Go mailing list<!-- raw HTML omitted -->: a code generator.<!-- raw HTML omitted --><!-- raw HTML omitted -->I had worked with <!-- raw HTML omitted -->Ned Batchelder<!-- raw HTML omitted --> at a now-defunct startup, where he developed <!-- raw HTML omitted -->cog.py<!-- raw HTML omitted -->. I figured I could do something pretty similar with Go, except, I could do one better - Go generates native executables, which means you can run it without needing any specific programming framework installed, and you can run it on any major operating system. Also, I could construct it so that gocog supports any programming language embedded in the file, so long as it can be run via command line.<!-- raw HTML omitted --><!-- raw HTML omitted -->Thus was born gocog - <!-- raw HTML omitted --><a href="https://github.com/natefinch/gocog">https://github.com/natefinch/gocog</a><!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted -->Gocog runs very similarly to cog.py - you give it files to look at, and it reads the files looking for specially tagged embedded code (generally in comments of the actual text). Gocog extracts the code, runs it, and rewrites the file with the output of the code embedded.<!-- raw HTML omitted --><!-- raw HTML omitted -->Thus you can do something like this in a file called test.html:<!-- raw HTML omitted --><!-- raw HTML omitted -->&lt;html&gt;<!-- raw HTML omitted -->&lt;body&gt;<!-- raw HTML omitted -->&lt;!&ndash; [[[gocog<!-- raw HTML omitted -->print &ldquo;&lt;b&gt;Hello World!&lt;/b&gt;&quot;<!-- raw HTML omitted -->gocog]]] &ndash;&gt;<!-- raw HTML omitted -->&lt;!&ndash; [[[end]]] &ndash;&gt;<!-- raw HTML omitted -->&lt;/body&gt;<!-- raw HTML omitted -->&lt;/html&gt;<!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted -->if you run gocog over the file, specifying python as the command to run:<!-- raw HTML omitted --><!-- raw HTML omitted -->gocog test.html -cmd python -args %s -ext .py<!-- raw HTML omitted --><!-- raw HTML omitted -->This tells gocog to extract the code from test.html into a  file with the .py extension, and then run python &lt;filename&gt; and pipe the output back into the file.<!-- raw HTML omitted --><!-- raw HTML omitted -->This is what test.html looks like after running gocog:<!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted -->&lt;html&gt;<!-- raw HTML omitted -->&lt;body&gt;<!-- raw HTML omitted -->&lt;!&ndash; [[[gocog<!-- raw HTML omitted -->print &ldquo;&lt;b&gt;Hello World!&lt;/b&gt;&quot;<!-- raw HTML omitted -->gocog]]] &ndash;&gt;<!-- raw HTML omitted -->&lt;b&gt;Hello World!&lt;/b&gt;<!-- raw HTML omitted -->&lt;!&ndash; [[[end]]] &ndash;&gt;<!-- raw HTML omitted -->&lt;/body&gt;<!-- raw HTML omitted -->&lt;/html&gt;<!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted -->Note that the generator code still exists in the file, so you can always rerun gocog to update the generated text.  <!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted -->By default gocog assumes you&rsquo;re running embedded Go in the file (hey, I wrote it, I&rsquo;m allowed to be biased), but you can specify any command line tool to run the code - python, ruby, perl, even compiled languages if you have a command line tool to compile and run them in a single step (I know of one for C# at least).<!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted -->&ldquo;Ok&rdquo;, you&rsquo;re saying to yourself, &ldquo;but what would I really do with it?&rdquo;  Well, it can be really useful for reducing copy and paste or recreating boilerplate. Ned and I used it to keep a schema of properties in sync over several different projects. Someone on Golang-nuts emailed me and is using it to generate boilerplate for CGo enum properties in Go.<!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted -->Gocog&rsquo;s sourcecode actually uses gocog - I embed the usage text into three different spots for documentation purposes - two in regular Go comments and one in a markdown file.  I also use gocog to generate a timestamp in the code that gets displayed with the version information.<!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted -->You don&rsquo;t need to know Go to run Gocog, it&rsquo;s just an executable that anyone can run, without any prerequisites.  You can download the binaries of the latest build from the gocog wiki here: <!-- raw HTML omitted --><a href="https://github.com/natefinch/gocog/wiki">https://github.com/natefinch/gocog/wiki</a><!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted -->Feel  free to submit an issue if you find a bug or would like to request a feature.<!-- raw HTML omitted --></p>
+
+    
+
+     
+	
+    <div id="disqus_thread"></div>
+<script type="text/javascript">
+
+(function() {
+    
+    
+    if (window.location.hostname == "localhost") 
+        return;
+
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    var disqus_shortname = 'npfio';
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+})();
+</script>
+<noscript>Please enable JavaScript to view the comments powered by <a href="http://disqus.com/?ref_noscript">Disqus.</a></noscript>
+</div>
+</div> 
+
+</body>w
+</html>

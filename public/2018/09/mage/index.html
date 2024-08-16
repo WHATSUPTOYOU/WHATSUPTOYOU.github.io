@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en-us">
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=8888&amp;path=livereload" data-no-instant defer></script>
+  <link href="https://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  
+
+  <title> Mage - make/rake for Go  &middot; npf.io </title>
+
+  
+  <link rel="stylesheet" href="http://192.168.42.140:8888//css/poole.css">
+  <link rel="stylesheet" href="http://192.168.42.140:8888//css/syntax.css">
+  <link rel="stylesheet" href="http://192.168.42.140:8888//css/hyde.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=PT+Sans:400,400italic,700|Abril+Fatface">
+
+  
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="manifest" href="/manifest.json">
+  <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+  <meta name="theme-color" content="#ffffff">
+
+  <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
+
+  <link href='https://fonts.googleapis.com/css?family=Fira+Sans:400,300' rel='stylesheet' type='text/css'>
+
+  <script src="//ajax.googleapis.com/ajax/libs/webfont/1.4.7/webfont.js"></script>
+  <script>
+    WebFont.load({
+      google: {
+        families: ['Fira Sans']
+      }
+    });
+  </script>
+
+</head>
+
+<body>
+
+  <div class="sidebar">
+  <div class="container sidebar-sticky">
+    <div class="sidebar-about" align=center>
+      <h1 class="brand"><a href="http://192.168.42.140:8888/">npf.io</a></h1>
+      <img src="/moose.svg" width=50% />
+      <p class="lead">
+         code by Nate Finch 
+      </p>
+    </div>
+    <ul class="sidebar-nav">
+      <li><a href="http://192.168.42.140:8888//blog">Posts</a></li>
+      
+      <li><a href="/about/">About </a></li>
+      
+      <br/> 
+      <li>Code:</li>
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+      <li><a href="https://github.com/gnormal/gnorm">Gnorm </a></li>
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+      <li><a href="https://github.com/natefinch/gorram">Gorram </a></li>
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+      <li><a href="https://github.com/natefinch/lumberjack">Lumberjack </a></li>
+       
+      <li><a href="https://github.com/magefile/mage">Mage </a></li>
+       
+       
+       
+       
+       
+       
+       
+      <li><a href="https://github.com/natefinch/npipe">NPipe </a></li>
+       
+       
+       
+       
+       
+      <li><a href="https://github.com/natefinch/pie">Pie </a></li>
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+      <li><a href="https://github.com/starlight-go/starlight">Starlight </a></li>
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+      
+    </ul>
+    <a href="https://twitter.com/natethefinch"><i class="fa fa-twitter-square"></i></a>&nbsp;&nbsp; 
+    
+    
+     <a href="https://github.com/natefinch"><i class="fa fa-github-square"></i></a>&nbsp;&nbsp; 
+    
+    <a href="https://plus.google.com/&#43;NateFinch"><i class="fa fa-google-plus"></i></a> 
+
+    <p class="footnote">powered by <a href="http://gohugo.io">Hugo</a> <br/> &copy; 2024 Nate Finch. All rights reserved.</p>
+
+  </div>
+</div>
+
+  <div class="content container">
+    <div class="post">
+    <h1 class="post-title">Mage - make/rake for Go</h1>
+    <span class="post-date">Sep 19, 2018</span>
+    
+    <!-- raw HTML omitted -->
+<h2 id="a-brief-history">A Brief History</h2>
+<p>A question came up at the Framingham Go meetup a while back about why something
+like Gradle hasn&rsquo;t taken hold in the Go community.  I can&rsquo;t say that I know for
+sure what the answer is - I don&rsquo;t speak for the community - but, I have some
+guesses. I think part of it is that many projects don&rsquo;t need a full-fledged
+build tool - for your typical Go networked server or CLI tool, a single binary
+built with <code>go build</code> is probably fine.</p>
+<p>For more complex builds, which may require more steps than just compile and
+link, like for bundling static assets in a web server or generating code from
+protobufs, for example, many people in the Go community reach for Make.
+Personally, I find that unfortunate.  Makefiles are clearly pretty cool for a
+number of reasons (built-in CLI, dependencies, file targets). However, Make is
+not Windows friendly, and it has its own language and conventions that you need
+to learn on top of the oddity that is Bash scripting.  Finally, it doesn&rsquo;t let
+you leverage the Go community&rsquo;s two greatest resources - go programmers and go
+code.</p>
+<h2 id="maybe-go-run--maybe-not">Maybe <code>go run</code>?  Maybe not</h2>
+<p>The above is the start of a blog post I&rsquo;ve had half written for two years.  I
+started to go on to recommend using <code>go run make.go</code> with a go file that does
+the build for you.  But in practice, this is problematic.  If you want your
+script to be useful for doing more than one thing, you need to implement a CLI
+and subcommands.  This ends up being a significant amount of work that then
+obscures what the actual code is doing&hellip; and no one wants to maintain yet
+another CLI just for development tasks.  In addition, there&rsquo;s a lot of chaff you
+have to handle, like printing out errors, setting up logging etc.</p>
+<h2 id="the-last-straw">The Last Straw</h2>
+<p>Last summer there were a couple questions on
+<a href="https://reddit.com/r/golang">r/golang</a> about best practices for using Makefiles
+with Go&hellip; and I finally decided I&rsquo;d had enough.</p>
+<p>I looked around at what existed for alternatives -
+<a href="https://github.com/ruby/rake">rake</a> was the obvious pattern to follow, being
+very popular in the Ruby community. <a href="http://www.pyinvoke.org/">pyinvoke</a> was the
+closest equivalent I saw in python.  Was there something similar in Go?  Well,
+sort of, but not exactly.  <a href="https://github.com/go-task/task">go-task</a> is
+<em>written</em> in Go, but tasks are actually defined in YAML.  Not my
+cup of tea.  Mark Bates wrote <a href="https://github.com/markbates/grift">grift</a> which
+has tasks written in Go, but I didn&rsquo;t really like the ergonomics&hellip; I wanted
+just a little more magic.</p>
+<p>I decided that I could write a tool that behaved pretty similarly to Make, but
+allowed you to write Go instead of Bash, and didn&rsquo;t need any special syntax if
+I did a little code parsing and generation on the fly.  Thus, Mage was born.</p>
+<h2 id="what-is-mage">What is Mage?</h2>
+<p><strong>Docs:</strong> <a href="https://magefile.org">magefile.org</a><!-- raw HTML omitted -->
+<strong>Github:</strong> <a href="https://github.com/magefile/mage">github.com/magefile/mage</a></p>
+<p>Mage is conceptually just like Make, except you write Go instead of Bash.  Of
+course, there&rsquo;s a little more to it than that. In Mage, like in Make, you write
+targets that can be accessed via a simple CLI.  In Mage, exported functions
+become targets.  Any of these exported functions are then runnable by running
+<code>mage &lt;func_name&gt;</code> in the directory where the magefile lives, just like you&rsquo;d run
+<code>make &lt;target_name&gt;</code> for a make target.</p>
+<h2 id="what-is-a-magefile">What is a Magefile?</h2>
+<p>A magefile is simply a .go file with the mage build tag in it.  All you need for
+a magefile is this:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#75715e">//+build mage
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">package</span> <span style="color:#a6e22e">main</span>
+</span></span></code></pre></div><p>Mage looks for all go files in the current directory with the <code>mage</code> build tag,
+and compiles them all together with a generated CLI.</p>
+<p>There are a few nice properties that result from using a build tag to mark
+magefiles - one is that you can use as many files as you like named whatever you
+like.  Just like in normal go code, the files all work together to create a
+package.</p>
+<p>Another really nice feature is that your magefiles can live side by side with
+your regular go code.  Mage only builds the files with the mage tag, and your
+normal go build only builds the files <em>without</em> the mage tag.</p>
+<h2 id="targets">Targets</h2>
+<p>A function in a magefile is a target if it is exported and has a signature of
+<code>func()</code>, <code>func()error</code>, <code>func(context.Context)</code>, or
+<code>func(context.Context)error</code>.  If the target has an error return and you return
+an error, Mage will automatically print out the error to its own stderr, and
+exit with a non-zero error code.</p>
+<p>Doc comments on each target become CLI docs for the magefile, doc comments on
+the package become top-level help docs.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#75715e">//+build mage
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// Mostly this is used for building the website and some dev tasks.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#f92672">package</span> <span style="color:#a6e22e">main</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// Builds the website.  If needed, it will compact the js as well.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">Build</span>() <span style="color:#66d9ef">error</span> {
+</span></span><span style="display:flex;"><span>   <span style="color:#75715e">// do your stuff here
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>   <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">nil</span>
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>Running mage with no arguments (or <code>mage -l</code> if you have a default target
+declared) will print out help text for the magefiles in the current directory.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-plain" data-lang="plain"><span style="display:flex;"><span>$ mage
+</span></span><span style="display:flex;"><span>Mostly this is used for building the website and some dev tasks.
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>Targets:
+</span></span><span style="display:flex;"><span> build    Builds the website.
+</span></span></code></pre></div><p>The first sentence is used as short help text, the rest is available via <code>mage -h &lt;target&gt;</code></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-plain" data-lang="plain"><span style="display:flex;"><span>$ mage -h build
+</span></span><span style="display:flex;"><span>mage build:
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>Builds the website.  If needed, it will compact the js as well.
+</span></span></code></pre></div><p>This makes it very easy to add a new target to your magefile with proper
+documentation so others know what it&rsquo;s supposed to do.</p>
+<p>You can declare a default target to run when you run mage without a target very
+easily:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#66d9ef">var</span> <span style="color:#a6e22e">Default</span> = <span style="color:#a6e22e">Build</span>
+</span></span></code></pre></div><p>And just like Make, you can run multiple targets from a single command&hellip; <code>mage build deploy clean</code> will do the right thing.</p>
+<h2 id="dependencies">Dependencies</h2>
+<p>One of the great things about Make is that it lets you set up a tree of
+dependencies/prerequisites that must execute and succeed before the current
+target runs.  This is easily done in Mage as well.  The
+<code>github.com/magefile/mage/mg</code> library has a <code>Deps</code> function that takes a list of
+dependencies, and runs them in parallel (and any dependencies they have), and
+ensures that each dependency is run exactly once and succeeds before continuing.</p>
+<p>In practice, it looks like this:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">Build</span>() <span style="color:#66d9ef">error</span> {
+</span></span><span style="display:flex;"><span>   <span style="color:#a6e22e">mg</span>.<span style="color:#a6e22e">Deps</span>(<span style="color:#a6e22e">Generate</span>, <span style="color:#a6e22e">Protos</span>)
+</span></span><span style="display:flex;"><span>   <span style="color:#75715e">// do build stuff
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">Generate</span>() <span style="color:#66d9ef">error</span> {
+</span></span><span style="display:flex;"><span>   <span style="color:#a6e22e">mg</span>.<span style="color:#a6e22e">Deps</span>(<span style="color:#a6e22e">Protos</span>)
+</span></span><span style="display:flex;"><span>   <span style="color:#75715e">// generate stuff
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">Protos</span>() <span style="color:#66d9ef">error</span> {
+</span></span><span style="display:flex;"><span>   <span style="color:#75715e">// build protos
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>}
+</span></span></code></pre></div><p>In this example, build depends on generate and protos, and generate depends on
+protos as well.  Running build will ensure that protos runs exactly once, before
+generate, and generate will run before build continues.  The functions sent to
+Deps don&rsquo;t have to be exported targets, but do have to match the same signature
+as targets have (i.e. optional context arg, and optional error return).</p>
+<h2 id="shell-helpers">Shell Helpers</h2>
+<p>Running commands via os/exec.Command is cumbersome if you want to capture
+outputs and return nice errors.  <code>github.com/magefile/mage/sh</code> has helper
+methods that do all that for you.  Instead of errors you get from exec.Command
+(e.g. &ldquo;command exited with code 1&rdquo;), <code>sh</code> uses the stderr from the command as
+the error text.</p>
+<p>Combine this with the automatic error reporting of targets, and you easily get
+helpful error messages from your CLI with minimal work:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">Build</span>() <span style="color:#66d9ef">error</span> {
+</span></span><span style="display:flex;"><span>   <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">sh</span>.<span style="color:#a6e22e">Run</span>(<span style="color:#e6db74">&#34;go&#34;</span>, <span style="color:#e6db74">&#34;build&#34;</span>, <span style="color:#e6db74">&#34;-o&#34;</span>, <span style="color:#e6db74">&#34;foo.out&#34;</span>)
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h2 id="verbose-mode">Verbose Mode</h2>
+<p>Another nice thing about the <code>sh</code> package is that if you run mage with <code>-v</code> to
+turn on verbose mode, the <code>sh</code> package will print out the args of what commands
+it runs.  In addition, mage sets up the stdlib <code>log</code> package to default to
+discard log messages, but if you run mage with -v, the default logger will
+output to stderr. This makes it trivial to turn on and off verbose logging in
+your magefiles.</p>
+<h2 id="how-it-works">How it Works</h2>
+<p>Mage parses your magefiles, generates a main function in a new file (which
+contains code for a generated CLI), and then shoves a compiled binary off in a
+corner of your hard drive.  The first time it does this for a set of magefiles,
+it takes about 600ms.  Using the go tool&rsquo;s ability to check if a binary needs to
+be rebuilt or not, further runs of the magefile avoid the compilation overhead
+and only take about 300ms to execute.  Any changes to the magefiles or their
+dependencies cause the cached binary to be rebuilt automatically, so you&rsquo;re
+always running the newest correct code.</p>
+<p>Mage is built 100% with the standard library, so you don&rsquo;t need to install a
+package manager or anything other than go to build it (and there are binary
+releases if you just want to curl it into CI).</p>
+<h2 id="conclusion">Conclusion</h2>
+<p>I&rsquo;ve been using Mage for all my personal projects for almost a year and for
+several projects at Mattel for 6 months, and I&rsquo;ve been extremely happy with it.
+It&rsquo;s easy to understand, the code is plain old Go code, and it has just enough
+helpers for the kinds of things I generally need to get done, taking all the
+peripheral annoyances out of my way and letting me focus on the logic that needs
+to be right.</p>
+<p>Give it a try, file some issues if you run into anything.  Pull requests more
+than welcome.</p>
+
+    
+
+     
+	
+    <div id="disqus_thread"></div>
+<script type="text/javascript">
+
+(function() {
+    
+    
+    if (window.location.hostname == "localhost") 
+        return;
+
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    var disqus_shortname = 'npfio';
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+})();
+</script>
+<noscript>Please enable JavaScript to view the comments powered by <a href="http://disqus.com/?ref_noscript">Disqus.</a></noscript>
+</div>
+</div> 
+
+</body>w
+</html>

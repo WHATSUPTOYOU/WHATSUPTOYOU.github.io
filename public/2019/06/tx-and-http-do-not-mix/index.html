@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en-us">
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=8888&amp;path=livereload" data-no-instant defer></script>
+  <link href="https://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  
+
+  <title> Transactions and HTTP Do Not Mix  &middot; npf.io </title>
+
+  
+  <link rel="stylesheet" href="http://192.168.42.140:8888//css/poole.css">
+  <link rel="stylesheet" href="http://192.168.42.140:8888//css/syntax.css">
+  <link rel="stylesheet" href="http://192.168.42.140:8888//css/hyde.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=PT+Sans:400,400italic,700|Abril+Fatface">
+
+  
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="manifest" href="/manifest.json">
+  <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+  <meta name="theme-color" content="#ffffff">
+
+  <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
+
+  <link href='https://fonts.googleapis.com/css?family=Fira+Sans:400,300' rel='stylesheet' type='text/css'>
+
+  <script src="//ajax.googleapis.com/ajax/libs/webfont/1.4.7/webfont.js"></script>
+  <script>
+    WebFont.load({
+      google: {
+        families: ['Fira Sans']
+      }
+    });
+  </script>
+
+</head>
+
+<body>
+
+  <div class="sidebar">
+  <div class="container sidebar-sticky">
+    <div class="sidebar-about" align=center>
+      <h1 class="brand"><a href="http://192.168.42.140:8888/">npf.io</a></h1>
+      <img src="/moose.svg" width=50% />
+      <p class="lead">
+         code by Nate Finch 
+      </p>
+    </div>
+    <ul class="sidebar-nav">
+      <li><a href="http://192.168.42.140:8888//blog">Posts</a></li>
+      
+      <li><a href="/about/">About </a></li>
+      
+      <br/> 
+      <li>Code:</li>
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+      <li><a href="https://github.com/gnormal/gnorm">Gnorm </a></li>
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+      <li><a href="https://github.com/natefinch/gorram">Gorram </a></li>
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+      <li><a href="https://github.com/natefinch/lumberjack">Lumberjack </a></li>
+       
+      <li><a href="https://github.com/magefile/mage">Mage </a></li>
+       
+       
+       
+       
+       
+       
+       
+      <li><a href="https://github.com/natefinch/npipe">NPipe </a></li>
+       
+       
+       
+       
+       
+      <li><a href="https://github.com/natefinch/pie">Pie </a></li>
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+      <li><a href="https://github.com/starlight-go/starlight">Starlight </a></li>
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+      
+    </ul>
+    <a href="https://twitter.com/natethefinch"><i class="fa fa-twitter-square"></i></a>&nbsp;&nbsp; 
+    
+    
+     <a href="https://github.com/natefinch"><i class="fa fa-github-square"></i></a>&nbsp;&nbsp; 
+    
+    <a href="https://plus.google.com/&#43;NateFinch"><i class="fa fa-google-plus"></i></a> 
+
+    <p class="footnote">powered by <a href="http://gohugo.io">Hugo</a> <br/> &copy; 2024 Nate Finch. All rights reserved.</p>
+
+  </div>
+</div>
+
+  <div class="content container">
+    <div class="post">
+    <h1 class="post-title">Transactions and HTTP Do Not Mix</h1>
+    <span class="post-date">Jun 6, 2019</span>
+    
+    <p>Unless you have a very boring system, your server probably does two very common things: it talks to
+a database, and it talks to other servers.</p>
+<p>One of the great things about relational databases is transactions. You can save multiple pieces of
+data and if any of them fail, the whole thing rolls back automatically and you don&rsquo;t get half-saved
+data.  Awesome.  Now say you&rsquo;re doing that, you open a transaction, you&rsquo;re saving some data, reading
+other data, and then you need some data from an external system to save to your DB&hellip; you just make
+an HTTP call right? NO!</p>
+<p>Here&rsquo;s the thing, the database transaction holds onto a database connection throughout the life of
+the transaction.  Not only that, but it can lock rows that block other changes from going through
+until the transaction runs.  Now imagine the HTTP server on the other end of your call hangs for 10
+seconds. Now your DB connection is tied up for 10 seconds, the rows are possibly locked for 10
+seconds&hellip; badness ensues.</p>
+<p>We hit this kind of problem on a recent loadtest at Mattel.  A third party service that normally
+returns very quickly, got bogged down during the load test and suddenly started timing out.  Deep
+inside our code, we had abstracted away these calls so they just look like funciton calls (as you
+do)&hellip; but it means that we were actually doing web calls in the middle of an open database
+transaction. Badness ensued. The number of open database connections skyrocketed, requests to our
+service started timing out&hellip;</p>
+<p>Luckily, we had a pretty good idea of what the problem was, because we&rsquo;d already been looking into
+exactly this problem&hellip; there were just a bunch of places we hadn&rsquo;t gotten to yet. Well, there&rsquo;s no
+time like the present.</p>
+<p>Now, detangling all these calls is hard enough. Most of the HTTP calls inside transactions followed
+two general patterns: either a function was trying to do two things at once (DoThingOrOtherThing),
+or it didn&rsquo;t need a transaction at all.</p>
+<p>For the first&hellip; very often we&rsquo;d be doing calls out to external services to read/write data and then
+use the returned data to save stuff to the database. This is easy to fix by making them separate
+functions, and putting the external access code outside the transaction, and then use the data it
+returns in a transaction.</p>
+<p>For the second, lots of times we do multiple reads from the database, and then use that data to
+write back to the DB, but all the writes end up using foreign keys to the data we read, so if those
+rows were to be deleted in the middle, our writes would just fail with a foreign key violation, and
+any previously written rows would have been deleted via a cascading delete. No big deal.  (Also,
+deletes are super uncommon in our code)</p>
+<p>So, we can fix this through careful examination and refactoring the code&hellip; but how do we prevent it
+in the first place.  As a developer working on a largish project, how do you know if any random
+interface method calls out to an external server or if it&rsquo;s in-memory? It&rsquo;s just an interface,
+right? Well, if you&rsquo;re doing it right, there&rsquo;s probably a good indication right in the function
+arguments - context.</p>
+<p>If you&rsquo;re writing your code correctly, all network calls take a context. non-networked calls</p>
+<p>What I want is a flag I can put on a function that makes it very clear from the line where you call
+the function that it should not be called while a database transaction is open.  I think we can do
+this without</p>
+
+    
+
+     
+	
+    <div id="disqus_thread"></div>
+<script type="text/javascript">
+
+(function() {
+    
+    
+    if (window.location.hostname == "localhost") 
+        return;
+
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    var disqus_shortname = 'npfio';
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+})();
+</script>
+<noscript>Please enable JavaScript to view the comments powered by <a href="http://disqus.com/?ref_noscript">Disqus.</a></noscript>
+</div>
+</div> 
+
+</body>w
+</html>

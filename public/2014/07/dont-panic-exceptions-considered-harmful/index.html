@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en-us">
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=8888&amp;path=livereload" data-no-instant defer></script>
+  <link href="https://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  
+
+  <title> Don&#39;t Panic: Exceptions Considered Harmful  &middot; npf.io </title>
+
+  
+  <link rel="stylesheet" href="http://192.168.42.140:8888//css/poole.css">
+  <link rel="stylesheet" href="http://192.168.42.140:8888//css/syntax.css">
+  <link rel="stylesheet" href="http://192.168.42.140:8888//css/hyde.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=PT+Sans:400,400italic,700|Abril+Fatface">
+
+  
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="manifest" href="/manifest.json">
+  <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+  <meta name="theme-color" content="#ffffff">
+
+  <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
+
+  <link href='https://fonts.googleapis.com/css?family=Fira+Sans:400,300' rel='stylesheet' type='text/css'>
+
+  <script src="//ajax.googleapis.com/ajax/libs/webfont/1.4.7/webfont.js"></script>
+  <script>
+    WebFont.load({
+      google: {
+        families: ['Fira Sans']
+      }
+    });
+  </script>
+
+</head>
+
+<body>
+
+  <div class="sidebar">
+  <div class="container sidebar-sticky">
+    <div class="sidebar-about" align=center>
+      <h1 class="brand"><a href="http://192.168.42.140:8888/">npf.io</a></h1>
+      <img src="/moose.svg" width=50% />
+      <p class="lead">
+         code by Nate Finch 
+      </p>
+    </div>
+    <ul class="sidebar-nav">
+      <li><a href="http://192.168.42.140:8888//blog">Posts</a></li>
+      
+      <li><a href="/about/">About </a></li>
+      
+      <br/> 
+      <li>Code:</li>
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+      <li><a href="https://github.com/gnormal/gnorm">Gnorm </a></li>
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+      <li><a href="https://github.com/natefinch/gorram">Gorram </a></li>
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+      <li><a href="https://github.com/natefinch/lumberjack">Lumberjack </a></li>
+       
+      <li><a href="https://github.com/magefile/mage">Mage </a></li>
+       
+       
+       
+       
+       
+       
+       
+      <li><a href="https://github.com/natefinch/npipe">NPipe </a></li>
+       
+       
+       
+       
+       
+      <li><a href="https://github.com/natefinch/pie">Pie </a></li>
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+      <li><a href="https://github.com/starlight-go/starlight">Starlight </a></li>
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+      
+    </ul>
+    <a href="https://twitter.com/natethefinch"><i class="fa fa-twitter-square"></i></a>&nbsp;&nbsp; 
+    
+    
+     <a href="https://github.com/natefinch"><i class="fa fa-github-square"></i></a>&nbsp;&nbsp; 
+    
+    <a href="https://plus.google.com/&#43;NateFinch"><i class="fa fa-google-plus"></i></a> 
+
+    <p class="footnote">powered by <a href="http://gohugo.io">Hugo</a> <br/> &copy; 2024 Nate Finch. All rights reserved.</p>
+
+  </div>
+</div>
+
+  <div class="content container">
+    <div class="post">
+    <h1 class="post-title">Don&#39;t Panic: Exceptions Considered Harmful</h1>
+    <span class="post-date">Jul 14, 2014</span>
+    
+    <p>One of the most common complaints against Go is its lack of exceptions.  Go is often said to be stuck in the past, without this modern programming convenience.  I think this is actually completely backwards - exceptions are an old fashioned idea that do not fit with modern programming environments, or modern knowledge of what makes programs robust.<!-- raw HTML omitted --><!-- raw HTML omitted -->The main reason for this is multi-threaded applications.  Exceptions as a concept only really make sense in a single threaded application.  Almost every argument about why they&rsquo;re good falls down once you start running dozens or hundreds of independent threads&hellip;. and to be honest, they don&rsquo;t make much sense in single threaded environments either.<!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted -->Invisible Control Flow<!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted -->def foo():<!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted -->    a = bar()<!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted -->    b = baz(a)<!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted -->    return bat(b)<!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted -->Where are the exit points for this function?  You don&rsquo;t know.  You <!-- raw HTML omitted -->can&rsquo;t<!-- raw HTML omitted --> know.  Any of the functions you call may throw an exception.  Sure, you can look at the implementations of bar, baz, and bat to see if they throw, but if they call any other functions, you&rsquo;ll have to go look at those implementations, too, etc etc.  And god forbid if someone changes one of those functions in 6 months to throw.<!-- raw HTML omitted --><!-- raw HTML omitted -->So, if you don&rsquo;t know where the function can exit, how can you know what it&rsquo;ll do?  How can you know if the function is <!-- raw HTML omitted -->correct<!-- raw HTML omitted -->?  This is one of my main arguments against exceptions&hellip; they mean that I don&rsquo;t trust my own code, because I can&rsquo;t tell if it&rsquo;s correct, without a hell of a lot of inspection, even for trivial functions.<!-- raw HTML omitted --><!-- raw HTML omitted -->Compare to the Go version:<!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted -->func Foo() int {<!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted -->    a := bar()<!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted -->    b := baz(a)<!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted -->    return bat(b)<!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted -->}<!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted -->It&rsquo;s practically identical code.  So what&rsquo;s the difference?  I <!-- raw HTML omitted -->know<!-- raw HTML omitted --> what the exit points of the function are.  There&rsquo;s just one - when we return the value returned by bat.  I <!-- raw HTML omitted -->know<!-- raw HTML omitted --> that bar, baz, and bat can&rsquo;t fail, because they don&rsquo;t return errors, and if they did, the compiler would immediately tell me that my code was wrong.  That has an amazing effect on my ability to understand my own code, just by looking at it.  In addition, if someone later changes baz so that it may fail, this code will no longer compile.<!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted -->Stack Traces<!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted -->People complain that Go&rsquo;s errors don&rsquo;t have stack traces, so you can&rsquo;t even tell what was going on when you get an error.  This is actually only partially true - an error is an interface, and you are perfectly able to write an error implementation that prints out a stack trace.  However, as I said above, modern applications are not single threaded.  There&rsquo;s not one stack, there&rsquo;s dozens, possibly hundreds or even thousands.<!-- raw HTML omitted --><!-- raw HTML omitted -->The stack trace of the error you&rsquo;re handling may only be 3 levels deep, because someone just fired off a goroutine to run something asynchronously.  Showing those three lines probably doesn&rsquo;t tell you much.  You&rsquo;d need to dump all the stack traces of all the threads in your application to actually get an idea of what was going on, and even then, you can&rsquo;t tell which thread spawned which other thread, which thread is waiting to receive data from another thread, etc. <!-- raw HTML omitted --><!-- raw HTML omitted -->In addition, stack traces are useless to computers&hellip; you know, the thing that&rsquo;s actually running your code.  No one ever writes a handler for an exception and parses the stack trace to try to find out how to handle the error.  Stack traces are nice functionality to have for programmers to debug problems, but they&rsquo;re only really useful with exceptions if something goes completely wrong and no one handles your error, which hopefully doesn&rsquo;t happen often, right? So now you&rsquo;re left with the exception type and value, just like Go&rsquo;s error interface.<!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted -->You Can Ignore Exceptions<!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted -->Another common complaint about Go&rsquo;s error handling is that you can ignore an error and continue running in an unknown state, whereas exceptions can&rsquo;t be ignored.  Again, this is an argument from another era where we were all running single threaded applications.  Uncaught exceptions will <!-- raw HTML omitted -->not<!-- raw HTML omitted --> always terminate your program.<!-- raw HTML omitted --><!-- raw HTML omitted -->Maybe in 1997 they (almost) always would. In 2014, we have multi-threaded applications.  In Python, Ruby, Java, and C#, if you have an uncaught exception, it terminates the thread where the exception originated.  If this is the main thread of the application, the application is terminated.  If it is not the main thread, that thread is terminated and the application continues running happily along as if nothing happened <!-- raw HTML omitted -->and the exception is ignored<!-- raw HTML omitted -->.<!-- raw HTML omitted --><!-- raw HTML omitted -->Not only that, but you can often ignore errors accidentally, by making a too-broad try/catch that ends up catching exceptions thrown from six levels deep that you didn&rsquo;t even know existed (or perhaps <!-- raw HTML omitted -->didn&rsquo;t<!-- raw HTML omitted --> exist when you first wrote the code).<!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted -->Errors in Go are Easy to Ignore<!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted -->Often times, a function call in Go will return both a value and an error. That error must be either referenced or explicitly discarded, or your code won&rsquo;t compile, like so: http://play.golang.org/p/j7XsJlnUWE<!-- raw HTML omitted --><!-- raw HTML omitted -->For functions that only return a single error, you <!-- raw HTML omitted -->can<!-- raw HTML omitted --> simply not assign the error to anything, however there are linters such as <!-- raw HTML omitted -->errcheck<!-- raw HTML omitted --> which can find these spots and inform you when you&rsquo;re doing something dumb.  Also, unlike exceptions in most languages, error returns are a normal part of Go function signatures, so it&rsquo;s trivial to look at a function you&rsquo;re calling and determine if it may fail&hellip; So, usually this just never comes up. If it a function can return an error, you handle it, if it doesn&rsquo;t, you don&rsquo;t.<!-- raw HTML omitted --><!-- raw HTML omitted -->Contrast this to exceptions in anything except Java (and in many Java programs that have a lot of <!-- raw HTML omitted -->throws Exception<!-- raw HTML omitted --> statements) where you have to either trust the function&rsquo;s documentation, or inspect the code of the function (and all functions it calls) to know if it might throw an exception.  It&rsquo;s much easier to fail to realize a function may throw an exception.  And sure, if it&rsquo;s in the main thread of your application, the application will crash if it happens.  However, that&rsquo;s a runtime error that may only happen under bizarre circumstances, and the users of your application will certainly not appreciate that their application crashed.  And if it happens in a background thread&hellip; well, good luck.<!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted -->The Boilerplate Myth<!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted -->One of the most common complaints against Go&rsquo;s error handling is that Go forces you to type this all the time:<!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted -->f, err := os.Open(&ldquo;foo&rdquo;)<!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted -->if err != nil {<!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted -->    return nil<!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted -->}<!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted -->Whereas in other languages, you can just let the exception fly, like this:<!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted -->f = open(&lsquo;foo&rsquo;, &lsquo;r&rsquo;)<!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted -->In toy examples, this is true, however, in more realistic code that actually tries to handle errors correctly, the difference quickly becomes muddied.<!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted -->Take, for example, a function that merges files: it opens two files, appends the contents of one to the other.<!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted -->Here&rsquo;s the trivial example most people think about when they think of doing this in a language with exceptions:<!-- raw HTML omitted --><!-- raw HTML omitted -->def Merge(from, into):<!-- raw HTML omitted -->   <!-- raw HTML omitted --> <!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted -->The Happy Path Myth<!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted -->Another common complaint is that inline error handling muddies your code&rsquo;s &ldquo;happy path&rdquo;, and that error handling should be done in an &ldquo;error path&rdquo;.  Again, this is a complaint that appears true for toy examples, but falls down in real code.  Real code does not have one &ldquo;happy&rdquo; path.  It just has paths. <!-- raw HTML omitted --><!-- raw HTML omitted -->Any non-trivial code has more than one execution path even if it hits no unexpected errors.  What do you even qualify as an error?  If the configuration file is missing, is that an error? Or is that just an expected state of the world, where you use the default config values? <!-- raw HTML omitted --><!-- raw HTML omitted -->Yes, maybe that network call will fail sometimes and you&rsquo;ll need to retry.  That&rsquo;s not a happy path or an error path, it&rsquo;s just a path that you need to recognize and handle. <!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted --></p>
+
+    
+
+     
+	
+    <div id="disqus_thread"></div>
+<script type="text/javascript">
+
+(function() {
+    
+    
+    if (window.location.hostname == "localhost") 
+        return;
+
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    var disqus_shortname = 'npfio';
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+})();
+</script>
+<noscript>Please enable JavaScript to view the comments powered by <a href="http://disqus.com/?ref_noscript">Disqus.</a></noscript>
+</div>
+</div> 
+
+</body>w
+</html>

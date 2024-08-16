@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en-us">
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=8888&amp;path=livereload" data-no-instant defer></script>
+  <link href="https://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  
+
+  <title> Designing Libraries for Users  &middot; npf.io </title>
+
+  
+  <link rel="stylesheet" href="http://192.168.42.140:8888//css/poole.css">
+  <link rel="stylesheet" href="http://192.168.42.140:8888//css/syntax.css">
+  <link rel="stylesheet" href="http://192.168.42.140:8888//css/hyde.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=PT+Sans:400,400italic,700|Abril+Fatface">
+
+  
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="manifest" href="/manifest.json">
+  <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+  <meta name="theme-color" content="#ffffff">
+
+  <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
+
+  <link href='https://fonts.googleapis.com/css?family=Fira+Sans:400,300' rel='stylesheet' type='text/css'>
+
+  <script src="//ajax.googleapis.com/ajax/libs/webfont/1.4.7/webfont.js"></script>
+  <script>
+    WebFont.load({
+      google: {
+        families: ['Fira Sans']
+      }
+    });
+  </script>
+
+</head>
+
+<body>
+
+  <div class="sidebar">
+  <div class="container sidebar-sticky">
+    <div class="sidebar-about" align=center>
+      <h1 class="brand"><a href="http://192.168.42.140:8888/">npf.io</a></h1>
+      <img src="/moose.svg" width=50% />
+      <p class="lead">
+         code by Nate Finch 
+      </p>
+    </div>
+    <ul class="sidebar-nav">
+      <li><a href="http://192.168.42.140:8888//blog">Posts</a></li>
+      
+      <li><a href="/about/">About </a></li>
+      
+      <br/> 
+      <li>Code:</li>
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+      <li><a href="https://github.com/gnormal/gnorm">Gnorm </a></li>
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+      <li><a href="https://github.com/natefinch/gorram">Gorram </a></li>
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+      <li><a href="https://github.com/natefinch/lumberjack">Lumberjack </a></li>
+       
+      <li><a href="https://github.com/magefile/mage">Mage </a></li>
+       
+       
+       
+       
+       
+       
+       
+      <li><a href="https://github.com/natefinch/npipe">NPipe </a></li>
+       
+       
+       
+       
+       
+      <li><a href="https://github.com/natefinch/pie">Pie </a></li>
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+      <li><a href="https://github.com/starlight-go/starlight">Starlight </a></li>
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+      
+    </ul>
+    <a href="https://twitter.com/natethefinch"><i class="fa fa-twitter-square"></i></a>&nbsp;&nbsp; 
+    
+    
+     <a href="https://github.com/natefinch"><i class="fa fa-github-square"></i></a>&nbsp;&nbsp; 
+    
+    <a href="https://plus.google.com/&#43;NateFinch"><i class="fa fa-google-plus"></i></a> 
+
+    <p class="footnote">powered by <a href="http://gohugo.io">Hugo</a> <br/> &copy; 2024 Nate Finch. All rights reserved.</p>
+
+  </div>
+</div>
+
+  <div class="content container">
+    <div class="post">
+    <h1 class="post-title">Designing Libraries for Users</h1>
+    <span class="post-date">Sep 24, 2018</span>
+    
+    <p>UX stands for user experience.  Every piece of software has users, and they all
+have an experience when using your software.  Optimize your software to make it
+a good experience, and your users will love your software.  It doesn&rsquo;t matter if
+it&rsquo;s a backend library, a CLI tool, or a service in the cloud.  This article is
+mostly focused on libraries, but it applies to the other products as well.</p>
+<p>I often start writing software by designing the user experience I want first,
+and then figuring out how to implement that later.  In this way, I&rsquo;m not
+restricting myself by what I think is possible or most performant, but I instead
+focus on how it feels to <em>use</em> the end product.</p>
+<h2 id="actually-write-some-code">Actually Write Some Code</h2>
+<p>Pretend the library/tool/service already exists, and think about the common ways
+people will want to interact with it.</p>
+<p>Take a few of the common actions you expect people to perform with your code, and
+actually write some code using your fictitious library.  DON&rsquo;T SKIP THIS PART.
+Actually write actual code in your actual editor.  It doesn&rsquo;t necessarily have
+to run or compile (if applicable), but it needs to be as close to real
+usage as possible.  Don&rsquo;t handwave conversion functions or setup functions&hellip;
+that&rsquo;s actual code real users will need to write, so you need to write it, too,
+to understand what it&rsquo;s like to interact with your code.  This is the only way
+to really understand the ergonomics of your API.</p>
+<p>This is traditionally one of the stated benefits of test driven development,
+which I think is fine, but in my experience, good tests rarely mimic real
+systems at any significant depth.  Real tests carefully mock out all outside
+resources, uses very controlled input, and sets up complicated metrics for
+testing usage, outputs, etc &hellip; real code doesn&rsquo;t do any of that.  Real code
+interacts with real systems and generally trusts the library to do what it says
+it does (and report errors as appropriate).</p>
+<h2 id="thing-to-watch-out-for">Thing to Watch Out For</h2>
+<p>There are a bunch of standard tripping hazards that you can watch out for when
+designing your software.</p>
+<h3 id="types">Types</h3>
+<p>Do people have to bend over backwards to get their types to align with what your
+library takes?  Try to think about what other systems a user will be using as
+inputs to your library or what systems they&rsquo;ll feed outputs of your library
+into.  Are you using types that make those conversions easy or hard?</p>
+<p>Are you using types that make the restrictions of your API clear?  One of the
+key points to UX is making it easy to do the right thing, and hard or impossible
+to do the wrong thing.  one of the benefit of statically typed languages is that
+you <em>can&rsquo;t</em> pass a string into a function expecting an int.  But even in these
+languages, it&rsquo;s easy to be misleading about your API.  If a function in your API
+takes a string, but that string can only be one of three different values&hellip;
+you&rsquo;re using the wrong type.  It shouldn&rsquo;t be a string, it should be an enum
+(whatever that means in your language).</p>
+<p>Choose the most restrictive type you can, without destroying ease of use&hellip;
+and then ruthlessly check your inputs to make sure you return clear errors when
+the type system can&rsquo;t properly define all the restrictions of your library.</p>
+<h2 id="usage-patterns">Usage Patterns</h2>
+<p>Are their footguns they have to avoid like not calling A before B?</p>
+
+    
+
+     
+	
+    <div id="disqus_thread"></div>
+<script type="text/javascript">
+
+(function() {
+    
+    
+    if (window.location.hostname == "localhost") 
+        return;
+
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    var disqus_shortname = 'npfio';
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+})();
+</script>
+<noscript>Please enable JavaScript to view the comments powered by <a href="http://disqus.com/?ref_noscript">Disqus.</a></noscript>
+</div>
+</div> 
+
+</body>w
+</html>
